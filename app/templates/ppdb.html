@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Formulir PPDB{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width:500px;">
+    <h2 class="mb-4">Formulir Penerimaan Peserta Didik Baru</h2>
+    <form method="POST" action="{{ url_for('ppdb') }}">
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama Lengkap</label>
+            <input type="text" name="nama" id="nama" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="alamat" class="form-label">Alamat</label>
+            <input type="text" name="alamat" id="alamat" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="ttl" class="form-label">Tempat, Tanggal Lahir</label>
+            <input type="text" name="ttl" id="ttl" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="asal_sekolah" class="form-label">Asal Sekolah</label>
+            <input type="text" name="asal_sekolah" id="asal_sekolah" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="no_hp" class="form-label">No HP</label>
+            <input type="text" name="no_hp" id="no_hp" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Daftar</button>
+    </form>
+</div>
+{% endblock %}

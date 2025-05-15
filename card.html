@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Cards di {{ list_data.name }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Cards di {{ list_data.name }}</h1>
+
+<ul class="list-group mb-4">
+  {% for card in list_data.cards %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ card.title }}</strong><br>
+        <small>{{ card.description }}</small>
+      </div>
+      <a href="{{ url_for('routes.delete_card', card_id=card.id) }}" class="btn btn-sm btn-danger">Hapus</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<h3>Tambah Card</h3>
+<form method="POST" action="{{ url_for('routes.add_card', list_id=list_data.id) }}">
+  <div class="mb-3">
+    <input type="text" name="title" class="form-control" placeholder="Judul" required>
+  </div>
+  <div class="mb-3">
+    <textarea name="description" class="form-control" placeholder="Deskripsi"></textarea>
+  </div>
+  <button type="submit" class="btn btn-success">Tambah</button>
+</form>
+
+<a href="{{ url_for('routes.lists', board_id=list_data.board_id) }}" class="btn btn-secondary mt-3">Kembali ke Lists</a>
+{% endblock %}
