@@ -1,31 +1,25 @@
 from flask import Flask
-from .extensions import db, migrate, login_manager
-from app.models import User
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+from app.extensions import db, migrate, login_manager
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ppdb.db'
+    app.config['SECRET_KEY'] = 'your-secret-key'
 
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
 
-    from app.models import User
+    from app.routes.auth import auth_bp
+    app.register_blueprint(auth_bp)  # Remove url_prefix to allow root route handling
 
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+    from app.routes.user import user
+    app.register_blueprint(user, url_prefix='/user')  # opsional: kasih prefix untuk user
 
-    from app.auth import auth_bp
-    from app.dashboard import dashboard_bp
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(dashboard_bp)
+    from app.routes.dashboard import dashboard_bp
+    app.register_blueprint(dashboard_bp, url_prefix='/dashboard')  # prefix opsional
+
+    with app.app_context():
+        db.create_all()  # Create database tables
 
     return app
