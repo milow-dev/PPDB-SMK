@@ -1,50 +1,21 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import login_user, logout_user, login_required
-from app.extensions import db
-from app.models import User
+from flask import Flask
+from app.extensions import db, migrate, login_manager
+from app.routes.user import user as user_bp
+from app.routes.dashboard import dashboard_bp
 
-test_bp = Blueprint('test', __name__)
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ppdb.db'
+    app.config['SECRET_KEY'] = 'your-secret-key'
 
-# Login route
-@test_bp.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):  # Cek password
-            login_user(user)
-            return redirect(url_for('dashboard.dashboard'))  # Ganti ke halaman dashboard kamu
-        else:
-            flash('Username atau password salah.', 'danger')
-            return redirect(url_for('test.login'))
-    return render_template('login.html')
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
 
-# Register route
-@test_bp.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    app.register_blueprint(user_bp)
+    app.register_blueprint(dashboard_bp)
 
-        if User.query.filter_by(username=username).first():
-            flash('Username sudah terdaftar.', 'danger')
-            return redirect(url_for('test.register'))
+    with app.app_context():
+        db.create_all()
 
-        user = User(username=username)
-        user.set_password(password)
-        db.session.add(user)
-        db.session.commit()
-
-        flash('Akun berhasil dibuat. Silakan login.', 'success')
-        return redirect(url_for('test.login'))
-
-    return render_template('register.html')
-
-# Logout route
-@test_bp.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('Kamu berhasil logout.', 'info')
-    return redirect(url_for('test.login'))
+    return app
