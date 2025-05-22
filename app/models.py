@@ -5,8 +5,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
-    boards = db.relationship('Board', backref='owner', lazy=True)
+    role = db.Column(db.String(20), default='user')  # 'admin' or 'user'
     formulirs = db.relationship('Formulir', backref='user', lazy=True)
 
 class Board(db.Model):
@@ -37,4 +36,16 @@ class Formulir(db.Model):
     ttl = db.Column(db.String(100), nullable=False)
     asal_sekolah = db.Column(db.String(150), nullable=False)
     no_hp = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, approved, rejected
+    catatan = db.Column(db.Text, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    payment = db.relationship('Payment', backref='formulir', uselist=False)
+
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    payment_date = db.Column(db.DateTime, nullable=False)
+    payment_proof = db.Column(db.String(200))
+    status = db.Column(db.String(20), default='pending')  # pending, verified, rejected
+    catatan = db.Column(db.Text, nullable=True)
+    formulir_id = db.Column(db.Integer, db.ForeignKey('formulir.id'), nullable=False)

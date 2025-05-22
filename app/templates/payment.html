@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Pembayaran PPDB{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Form Pembayaran PPDB</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Jumlah Pembayaran</label>
+            <input type="number" name="amount" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Bukti Pembayaran</label>
+            <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Pembayaran</button>
+    </form>
+</div>
+{% endblock %}

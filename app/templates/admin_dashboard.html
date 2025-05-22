@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#pendaftar">
+                            Pendaftar Baru <span class="badge bg-primary">{{ pending_count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pembayaran">
+                            Verifikasi Pembayaran <span class="badge bg-warning">{{ payment_pending_count }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10">
+            <h2 class="mb-4">Dashboard Admin</h2>
+            
+            <!-- Pendaftar Section -->
+            <section id="pendaftar" class="mb-5">
+                <h4>Daftar Pendaftar</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Alamat</th>
+                                <th>TTL</th>
+                                <th>Asal Sekolah</th>
+                                <th>No HP</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for f in formulirs %}
+                            <tr>
+                                <td>{{ f.nama }}</td>
+                                <td>{{ f.alamat }}</td>
+                                <td>{{ f.ttl }}</td>
+                                <td>{{ f.asal_sekolah }}</td>
+                                <td>{{ f.no_hp }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if f.status == 'approved' else 'danger' if f.status == 'rejected' else 'warning' }}">
+                                        {{ f.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if f.status == 'pending' %}
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('dashboard.approve_formulir', formulir_id=f.id) }}" 
+                                           class="btn btn-sm btn-success">Terima</a>
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                data-bs-toggle="modal" data-bs-target="#rejectModal{{ f.id }}">
+                                            Tolak
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <!-- Reject Modal -->
+                            <div class="modal fade" id="rejectModal{{ f.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ url_for('dashboard.reject_formulir', formulir_id=f.id) }}" method="POST">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Alasan Penolakan</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="catatan" class="form-label">Catatan</label>
+                                                    <textarea class="form-control" name="catatan" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-danger">Tolak Pendaftaran</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Pembayaran Section -->
+            <section id="pembayaran">
+                <h4>Verifikasi Pembayaran</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Jumlah</th>
+                                <th>Tanggal</th>
+                                <th>Bukti</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in payments %}
+                            <tr>
+                                <td>{{ p.formulir.nama }}</td>
+                                <td>Rp {{ "{:,.0f}".format(p.amount) }}</td>
+                                <td>{{ p.payment_date.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    {% if p.payment_proof %}
+                                    <a href="{{ url_for('static', filename='uploads/' + p.payment_proof) }}" 
+                                       target="_blank" class="btn btn-sm btn-info">
+                                        Lihat Bukti
+                                    </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if p.status == 'verified' else 'danger' if p.status == 'rejected' else 'warning' }}">
+                                        {{ p.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if p.status == 'pending' %}
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('dashboard.verify_payment', payment_id=p.id) }}" 
+                                           class="btn btn-sm btn-success">Verifikasi</a>
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                data-bs-toggle="modal" data-bs-target="#rejectPaymentModal{{ p.id }}">
+                                            Tolak
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <!-- Reject Payment Modal -->
+                            <div class="modal fade" id="rejectPaymentModal{{ p.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ url_for('dashboard.reject_payment', payment_id=p.id) }}" method="POST">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Alasan Penolakan Pembayaran</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="catatan" class="form-label">Catatan</label>
+                                                    <textarea class="form-control" name="catatan" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-danger">Tolak Pembayaran</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

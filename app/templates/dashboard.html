@@ -1,50 +1,76 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard PPDB{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Dashboard</h2>
-    {% if current_user.is_admin %}
-        <h4>Informasi Peserta Didik Baru</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>TTL</th>
-                    <th>Asal Sekolah</th>
-                    <th>No HP</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for f in formulirs %}
-                <tr>
-                    <td>{{ f.nama }}</td>
-                    <td>{{ f.alamat }}</td>
-                    <td>{{ f.ttl }}</td>
-                    <td>{{ f.asal_sekolah }}</td>
-                    <td>{{ f.no_hp }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% if current_user.role == 'admin' %}
+        {% include 'admin_dashboard.html' %}
     {% else %}
-        <h4>Profil Anda</h4>
-        <ul class="list-group mb-3">
-            <li class="list-group-item"><strong>Username:</strong> {{ current_user.username }}</li>
-            {% if formulir %}
-                <li class="list-group-item"><strong>Nama:</strong> {{ formulir.nama }}</li>
-                <li class="list-group-item"><strong>Alamat:</strong> {{ formulir.alamat }}</li>
-                <li class="list-group-item"><strong>TTL:</strong> {{ formulir.ttl }}</li>
-                <li class="list-group-item"><strong>Asal Sekolah:</strong> {{ formulir.asal_sekolah }}</li>
-                <li class="list-group-item"><strong>No HP:</strong> {{ formulir.no_hp }}</li>
-            {% else %}
-                <li class="list-group-item text-danger">Anda belum mengisi formulir PPDB.</li>
-            {% endif %}
-        </ul>
-        {% if not formulir %}
-            <a href="{{ url_for('ppdb') }}" class="btn btn-success">Isi Formulir PPDB</a>
-        {% endif %}
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Status Pendaftaran PPDB</h4>
+                </div>
+                <div class="card-body">
+                    {% if formulir %}
+                    <div class="mb-4">
+                        <h5>Data Pendaftaran</h5>
+                        <div class="alert alert-{{ 'success' if formulir.status == 'approved' else 'warning' if formulir.status == 'pending' else 'danger' }}">
+                            Status: {{ formulir.status|upper }}
+                            {% if formulir.catatan %}
+                            <br>Catatan: {{ formulir.catatan }}
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Nama:</strong> {{ formulir.nama }}</p>
+                                <p><strong>TTL:</strong> {{ formulir.ttl }}</p>
+                                <p><strong>No HP:</strong> {{ formulir.no_hp }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Alamat:</strong> {{ formulir.alamat }}</p>
+                                <p><strong>Asal Sekolah:</strong> {{ formulir.asal_sekolah }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if payment %}
+                    <div class="mb-4">
+                        <h5>Status Pembayaran</h5>
+                        <div class="alert alert-{{ 'success' if payment.status == 'verified' else 'warning' if payment.status == 'pending' else 'danger' }}">
+                            Status: {{ payment.status|upper }}
+                            {% if payment.catatan %}
+                            <br>Catatan: {{ payment.catatan }}
+                            {% endif %}
+                        </div>
+                        <p><strong>Jumlah:</strong> Rp {{ "{:,.0f}".format(payment.amount) }}</p>
+                        <p><strong>Tanggal:</strong> {{ payment.payment_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                        {% if payment.payment_proof %}
+                        <p><strong>Bukti:</strong> 
+                            <a href="{{ url_for('static', filename='uploads/' + payment.payment_proof) }}" 
+                               target="_blank">Lihat Bukti Pembayaran</a>
+                        </p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="text-center">
+                        <p class="text-warning">Anda belum melakukan pembayaran</p>
+                        <a href="{{ url_for('dashboard.payment', formulir_id=formulir.id) }}" 
+                           class="btn btn-primary">Upload Pembayaran</a>
+                    </div>
+                    {% endif %}
+
+                    {% else %}
+                    <div class="text-center">
+                        <p class="text-warning">Anda belum mengisi formulir pendaftaran</p>
+                        <a href="{{ url_for('dashboard.formulir') }}" class="btn btn-primary">Isi Formulir</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

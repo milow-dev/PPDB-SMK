@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block title %}PPDB Online SMK{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">PPDB Online</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#alur">Alur PPDB</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#jadwal">Jadwal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#kontak">Kontak</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<div class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">PPDB SMK 2024</h1>
+                <p class="lead mb-4">Segera daftarkan diri anda menjadi bagian dari SMK kami dan raih masa depan yang lebih baik</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">Daftar Sekarang</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alur PPDB Section -->
+<div id="alur" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Alur Pendaftaran</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body">
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">1</h3>
+                        </div>
+                        <h5>Registrasi</h5>
+                        <p class="text-muted">Daftar akun PPDB Online</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body">
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">2</h3>
+                        </div>
+                        <h5>Isi Formulir</h5>
+                        <p class="text-muted">Lengkapi data diri</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body">
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">3</h3>
+                        </div>
+                        <h5>Pembayaran</h5>
+                        <p class="text-muted">Upload bukti pembayaran</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="card-body">
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <h3 class="m-0">4</h3>
+                        </div>
+                        <h5>Selesai</h5>
+                        <p class="text-muted">Tunggu pengumuman</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Jadwal Section -->
+<div id="jadwal" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Jadwal PPDB</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Pendaftaran Online</strong></td>
+                                        <td>1 - 30 Juni 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Verifikasi Berkas</strong></td>
+                                        <td>1 - 7 Juli 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Pengumuman</strong></td>
+                                        <td>10 Juli 2025</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Daftar Ulang</strong></td>
+                                        <td>11 - 14 Juli 2025</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kontak Section -->
+<div id="kontak" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Kontak Kami</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <p class="lead">Jika ada pertanyaan, silakan hubungi kami:</p>
+                <p><i class="fas fa-phone me-2"></i> (021) 1234567</p>
+                <p><i class="fas fa-envelope me-2"></i> ppdb@smkkaryabangsa.sch.id</p>
+                <p><i class="fas fa-map-marker-alt me-2"></i> Jl. Lintas Sintang-Pontianak</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login Admin Link -->
+<div class="py-3 bg-light">
+    <div class="container text-center">
+        <a href="{{ url_for('auth.admin_login') }}" class="text-muted text-decoration-none">
+            <small>Admin Login</small>
+        </a>
+    </div>
+</div>
+{% endblock %}
