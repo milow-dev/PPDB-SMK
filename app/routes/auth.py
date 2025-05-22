@@ -7,8 +7,8 @@ from app.extensions import db
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/')
-def home():
-    return render_template('home.html')
+def index():
+    return render_template('index.html')
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():

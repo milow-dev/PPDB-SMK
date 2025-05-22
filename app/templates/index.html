@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>PPDB SMK Karya Bangsa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+        header { background: #003366; color: #fff; padding: 20px; text-align: center; }
+        header a { color: #fff; margin: 0 8px; text-decoration: none; }
+        section { padding: 20px; max-width: 800px; margin: 20px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1, h2 { margin-top: 0; }
+        footer { text-align: center; padding: 10px; background: #003366; color: #fff; margin-top: 20px; }
+        .btn { display: inline-block; padding: 10px 20px; background: #003366; color: #fff; border-radius: 5px; text-decoration: none; margin: 5px; }
+        .btn:hover { background: #00509e; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>PPDB SMK Karya Bangsa</h1>
+        <p>Alamat: Jl. Pendidikan No. 123 | Email: info@smkn1example.sch.id | Telp: 021-5551234</p>
+        <div>
+            <a href="https://facebook.com">Facebook</a>
+            <a href="https://instagram.com">Instagram</a>
+        </div>
+    </header>
+
+    <section>
+        <h2>Visi & Misi</h2>
+        <p><strong>Visi:</strong> Menjadi sekolah kejuruan unggulan nasional</p>
+        <p><strong>Misi:</strong></p>
+        <ul>
+            <li>Menghasilkan lulusan kompeten & berkarakter</li>
+            <li>Meningkatkan layanan pendidikan berbasis industri</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Login Siswa</h2>
+        <a href="{{ url_for('user.login') }}" class="btn">Login</a>
+        <a href="{{ url_for('user.register') }}" class="btn">Daftar</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 SMK Karya Bangsa</p>
+    </footer>
+</body>
+</html>
